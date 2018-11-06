@@ -2,6 +2,7 @@ console.log('me')
 
 import Population from './src/Population'
 import { spawn } from 'child_process';
+import { generateKeyPairSync } from 'crypto';
 
 new Population([[[0, 1, 2]]], 1, 2);
 
@@ -31,6 +32,16 @@ const main = () => {
 
 
 main();
+
+const log = (population: number[][][][]): number[][][][] => {
+    console.log(`highest fitness ${fitness(population[0])}`);
+    return population;
+}
+
+const simulate = (population: number[][][][]) => {
+    population = pipe(generate, evaluate, log)(population)
+    population = evolve(population);
+}
 
 // const main = (score) => {
 //     const population = new Population(score)
