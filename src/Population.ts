@@ -1,26 +1,30 @@
-import Phenotype from './Phenotype';
+// import Phenotype from './Phenotype';
 import Score from './Score';
-import { fitness } from './Fitness';
+// import { fitness } from './Fitness';
 import config from '../config';
 import { pipe } from './Utils';
 
-interface evaulatedScore {
-    fitness: number;
-    score: number[][][];
+interface Phenotype {
+    fitness: number | null;
+    genotype: number[][][];
 }
 
-// export default class {
-//     /**
-//      * 
-//      * @param template a 3d array that describes a score as notes, measures, and parts. 
-//      * @param populationSize 
-//      * @param elitism how many of the best survive at each generation
-//      */
-//     constructor (template: number[][][], populationSize: number, elitism: number) {
-//         Object.assign(this, {template, populationSize, elitism});
-//         console.log(this.template);
-//     }
-// }
+/**
+ * Make an initial population from a single template score
+ */
+export const initialize = (score: number[][][]): number[][][][] => {
+    return Array(config.populationSize).map( () => mutate(score));
+}
+
+export const mutate = (genotype: number[][][]): number[][][] => {
+    return genotype.map(part => {
+        return part.map(measure => {
+            return measure.map(gene => {
+                return Math.random() < config.mutationRate ? Math.random() : gene;
+            })
+        })
+    })
+}
 
 const generate = (population: number[][][][]): number[][][][] => {
     return population;
@@ -28,12 +32,12 @@ const generate = (population: number[][][][]): number[][][][] => {
 
 /**
  * 
- * sort a population in order of fitness and return only the fittest specimens
+ * sort a population in order of fitness and return only the fittest
  */
-const evaluateNAIVE = (population: number[][][][]): number[][][][] => {
-    // can this be made faster through memoization ?
-    return population.sort((a, b) => fitness(a) - fitness(b)).slice(0, 3)
-}
+// const evaluateNAIVE = (population: number[][][][]): number[][][][] => {
+//     // can this be made faster through memoization ?
+//     return population.sort((a, b) => fitness(a) - fitness(b)).slice(0, 3)
+// }
 
 const evaluate = (population: number[][][][]): evaulatedScore[] => {
     return population.map(score => {
@@ -44,11 +48,9 @@ const evaluate = (population: number[][][][]): evaulatedScore[] => {
     })
 }
 
-const select = (evaluatedPopulation: evaulatedScore[]): number[][][][] => {
+const select = (evaluatedPopulation: Phenotype[]): Phenotype[] => {
     return evaluatedPopulation.sort((a, b) => {
         return a.fitness - b.fitness;
-    }).map(evaluatedScore => {
-        return evaluatedScore.score
     }).slice(0, config.elitism);
 }
 
