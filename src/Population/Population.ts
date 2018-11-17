@@ -39,11 +39,11 @@ const generate = (population: number[][][][]): number[][][][] => {
 //     return population.sort((a, b) => fitness(a) - fitness(b)).slice(0, 3)
 // }
 
-const evaluate = (population: number[][][][]): evaulatedScore[] => {
-    return population.map(score => {
+const evaluate = (population: Phenotype[]): Phenotype[] => {
+    return population.map(phenotype => {
         return {
-            score,
-            fitness: fitness(score)
+            ...phenotype,
+            fitness: fitness(phenotype)
         }
     })
 }

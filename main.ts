@@ -1,6 +1,6 @@
 console.log('me')
 
-import { evolve } from './src/Population'
+import { evolve, initialize } from './src/Population'
 import { spawn } from 'child_process';
 import { generateKeyPairSync } from 'crypto';
 
@@ -23,8 +23,9 @@ const main = () => {
     }).on('error', err => {
         console.warn('error parsing score', err)
     }).stdout.on('data', data => {
-        console.log('data', data.toString());
-        // const template = JSON.parse(data.toString())
+        // console.log('data', data.toString());
+        const prototype = JSON.parse(data.toString())
+        const population = initialize(prototype);
     })
 }
 
