@@ -1,19 +1,11 @@
-console.log('me')
-
-import { evolve, initialize } from './src/Population'
+import { evolve, initialize } from './src/Population/Population'
 import { spawn } from 'child_process';
-import { generateKeyPairSync } from 'crypto';
+const config = require('./config.json');
+const path = require('path');
 
-const terminationFitness = 0;
+(() => {
 
-const main = () => {
-    let scorePath: string = '.input/frereJaques'
-    process.argv.forEach(arg=>{
-        if(arg.startsWith('--score=')) {
-            scorePath = arg.split('=')[1];
-        }
-    });
-
+    let scorePath: string = path.join(__dirname, 'input', 'majorScale.mxl')
     console.log(`parsing input file ${scorePath}`);
 
     const parseScore = spawn('python', ["scripts/parseScore.py", scorePath])
@@ -23,15 +15,11 @@ const main = () => {
     }).on('error', err => {
         console.warn('error parsing score', err)
     }).stdout.on('data', data => {
-        // console.log('data', data.toString());
-        const prototype = JSON.parse(data.toString())
-        const population = initialize(prototype);
+        console.log('data', data.toString());
+        // const prototype = JSON.parse(data.toString())
     })
-}
+})();
 
-
-main();
-
-const simulate = (population: number[][][][]) => {
-    population = evolve(population);
-}
+// const simulate = (population: number[][][][]) => {
+//     population = evolve(population);
+// }

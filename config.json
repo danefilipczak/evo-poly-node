@@ -1,0 +1,5 @@
+{
+    "elitism": 3,
+    "mutationRate": 0.1,
+    "populationSize": 100
+}

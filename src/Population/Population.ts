@@ -1,8 +1,8 @@
 // import Phenotype from './Phenotype';
-import Score from './Score';
+import Score from '../Score';
 // import { fitness } from './Fitness';
-import config from '../config';
-import { pipe } from './Utils';
+const config = require('../../config.json');
+import { pipe } from '../Utils';
 
 interface Phenotype {
     fitness: number | null;
