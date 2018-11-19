@@ -4,7 +4,6 @@ const config = require('./config.json');
 const path = require('path');
 
 (() => {
-
     let scorePath: string = path.join(__dirname, 'input', 'majorScale.mxl')
     console.log(`parsing input file ${scorePath}`);
 
