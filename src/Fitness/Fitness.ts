@@ -12,7 +12,7 @@ export const fitness = (genotype: number[][][]): number => {
 
 export const phenotype = (genotype: number[][][]): any[][][] => {
     return genotype.map(part => part.map(measure => measure.map(gene => {
-        const int = Math.round(gene*(config().ambitus+2));
-        return int <= config().ambitus ? int : int === config().ambitus + 1 ? '...' : null
+        const int = Math.round(gene*(config.ambitus+2));
+        return int <= config.ambitus ? int : int === config.ambitus + 1 ? '...' : null
     })));
 }
