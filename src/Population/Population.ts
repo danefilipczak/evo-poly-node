@@ -1,10 +1,10 @@
 // import Phenotype from './Phenotype';
 import Score from '../Score';
 // import { fitness } from './Fitness';
-const config = require('../../config.json');
+import { config } from '../Utils';
 import { pipe } from '../Utils';
 
-interface Phenotype {
+interface evaluatedGenotype {
     fitness: number | null;
     genotype: number[][][];
 }
@@ -13,14 +13,14 @@ interface Phenotype {
  * Make an initial population from a single template score
  */
 export const initialize = (score: number[][][]): number[][][][] => {
-    return Array(config.populationSize).map( () => mutate(score));
+    return Array(config().populationSize).map( () => mutate(score));
 }
 
 export const mutate = (genotype: number[][][]): number[][][] => {
     return genotype.map(part => {
         return part.map(measure => {
             return measure.map(gene => {
-                return Math.random() < config.mutationRate ? Math.random() : gene;
+                return Math.random() < config().mutationRate ? Math.random() : gene;
             })
         })
     })
@@ -30,33 +30,24 @@ const generate = (population: number[][][][]): number[][][][] => {
     return population;
 }
 
-/**
- * 
- * sort a population in order of fitness and return only the fittest
- */
-// const evaluateNAIVE = (population: number[][][][]): number[][][][] => {
-//     // can this be made faster through memoization ?
-//     return population.sort((a, b) => fitness(a) - fitness(b)).slice(0, 3)
-// }
-
-const evaluate = (population: Phenotype[]): Phenotype[] => {
-    return population.map(phenotype => {
+const evaluate = (population: number[][][][]): evaluatedGenotype[] => {
+    return population.map(genotype => {
         return {
-            ...phenotype,
-            fitness: fitness(phenotype)
+            genotype,
+            fitness: fitness(genotype)
         }
     })
 }
 
-const select = (evaluatedPopulation: Phenotype[]): Phenotype[] => {
+const select = (evaluatedPopulation: evaluatedGenotype[]): evaluatedGenotype[] => {
     return evaluatedPopulation.sort((a, b) => {
         return a.fitness - b.fitness;
-    }).slice(0, config.elitism);
+    }).slice(0, config().elitism);
 }
 
-const log = (population: number[][][][]): number[][][][] => {
-    console.log(fitness(population[0]))
-    return population;
+const log = (evaluatedPopulation: evaluatedGenotype[]): evaluatedGenotype[] => {
+    console.log(evaluatedPopulation[0].fitness);
+    return evaluatedPopulation;
 }
 
 export const evolve = (population: number[][][][]): number[][][][] => {

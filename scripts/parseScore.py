@@ -1,10 +1,16 @@
+'''
+    This script defines a process for parseing musicXML into the format used by node
+'''
+
+
 import sys
 import json
 import music21 as m21
 import math
 
-# scorePath = sys.argv[1]
-scorePath = 'C:\\projects\\evo-poly-node\\input\\majorScale.mxl'
+# receive path to score as path via argv from node
+scorePath = sys.argv[1]
+# scorePath = 'C:\\projects\\evo-poly-node\\input\\majorScale.mxl'
 
 with open('./config.json', 'r') as f:
     config = json.load(f)
