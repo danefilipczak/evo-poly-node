@@ -1,7 +1,9 @@
+import { intervals, Interval } from './Intervals';
+
 const getConfig = () => {
     for (const arg of process.argv) {
         if (arg.includes('--config=')) {
-            return require(`../configs/${arg.split('=')[1]}.json`)
+            return require(`../../configs/${arg.split('=')[1]}.json`)
         }
     }
     console.log('you need to specify a config json via the command line argument --config')
@@ -31,11 +33,27 @@ export const sustain = (x: any[]): any[] => {
     return seq;
 }
 
+export const notes = (seq: any[]): number[] => {
+    return seq.reduce((prev, curr) => isNumber(curr) ? [...prev, curr] : prev, [])
+}
+
 export const config = getConfig();
 
 // reduce an nD array to a 1D array
 export const flatten = (input) => {
     return input.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+}
+/**
+ * convert an interval value expressed in semitones to an interval object
+ * 
+ */
+export const psToInterval = (delta: number): Interval => {
+    const octave = Math.floor(delta / 12)
+    const interval = intervals[Math.round(delta%12)];
+    return {
+        ...interval,
+        prefix: interval.prefix + (7 * octave),
+    };
 }
 
 export const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);

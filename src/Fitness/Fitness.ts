@@ -2,7 +2,7 @@
  * This module is responsible for computing the fitness of a given genotype
  * 
  */
-import { partCrossing } from '../VoiceLeading/VoiceLeading'
+import { partCrossing, parsimony } from '../VoiceLeading/VoiceLeading'
 
 import { config } from '../Utils/Utils'
 
