@@ -13,17 +13,13 @@ interface evaluatedGenotype {
  * Make an initial population from a single template score
  */
 export const initialize = (score: number[][][]): number[][][][] => {
-    return Array(config().populationSize).map( () => mutate(score));
+    return Array.apply(null, new Array(config.populationSize)).map(() => mutate(score));
 }
 
 export const mutate = (genotype: number[][][]): number[][][] => {
-    return genotype.map(part => {
-        return part.map(measure => {
-            return measure.map(gene => {
-                return Math.random() < config().mutationRate ? Math.random() : gene;
-            })
-        })
-    })
+    return genotype.map(voice => voice.map(measure => measure.map(gene => {
+        return Math.random() < config.mutationRate ? Math.random() : gene;
+    })))
 }
 
 const generate = (population: number[][][][]): number[][][][] => {
@@ -42,7 +38,7 @@ const evaluate = (population: number[][][][]): evaluatedGenotype[] => {
 const select = (evaluatedPopulation: evaluatedGenotype[]): evaluatedGenotype[] => {
     return evaluatedPopulation.sort((a, b) => {
         return a.fitness - b.fitness;
-    }).slice(0, config().elitism);
+    }).slice(0, config.elitism);
 }
 
 const log = (evaluatedPopulation: evaluatedGenotype[]): evaluatedGenotype[] => {

@@ -1,5 +1,12 @@
 {
     "elitism": 3,
     "mutationRate": 0.1,
-    "populationSize": 100
+    "populationSize": 100,
+    "ambitus": 19,
+    "ranges": [
+        60,
+        55,
+        48,
+        40
+    ]
 }
