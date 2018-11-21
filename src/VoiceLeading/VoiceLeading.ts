@@ -1,4 +1,4 @@
-import { flatten, sustain, isNumber } from '../Utils';
+import { flatten, sustain, isNumber } from '../Utils/Utils';
 
 /**
  * 
@@ -10,7 +10,7 @@ export const partCrossing = (score: any[][][]): boolean => {
         for (let j = 0; j < score2D[i].length; j++) {
             if (isNumber(score2D[i][j]) && isNumber(score2D[i+1][j])) {
                 // if the upper part is lower than or equal to the lower part
-                if(score2D[i][j] <= score2D[i][j]) {
+                if(score2D[i][j] <= score2D[i+1][j]) {
                     return true;
                 }
                 // if the next note in the lower part is greater than the higher part

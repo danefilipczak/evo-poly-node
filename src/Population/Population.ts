@@ -1,8 +1,8 @@
 // import Phenotype from './Phenotype';
 import Score from '../Score';
 // import { fitness } from './Fitness';
-import { config } from '../Utils';
-import { pipe } from '../Utils';
+import { config } from '../Utils/Utils';
+import { pipe } from '../Utils/Utils';
 
 interface evaluatedGenotype {
     fitness: number | null;

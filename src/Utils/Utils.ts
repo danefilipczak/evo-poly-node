@@ -33,7 +33,7 @@ export const sustain = (x: any[]): any[] => {
 
 export const config = getConfig();
 
-
+// reduce an nD array to a 1D array
 export const flatten = (input) => {
     return input.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
 }

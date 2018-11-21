@@ -32,7 +32,7 @@ for i in range(0, len(score.parts)):
                 struct[i][j].append(None)
         for note in measures[j].notes:
             index = int(note.offset * 2)
-            struct[i][j][index] = int(note.pitch.ps)
+            struct[i][j][index] = int(note.pitch.ps - config.ranges[i])
             # the number of spread operators needed is the note's quarterLength - 0.5 (an eigth note)
             numSpreads = round((note.quarterLength - 0.5) * 2)
             for l in range(1, numSpreads + 1):

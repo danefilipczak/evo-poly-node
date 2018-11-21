@@ -1,6 +1,6 @@
 import { evolve, initialize } from './src/Population/Population'
 import { spawn } from 'child_process';
-import { config } from './src/Utils'
+import { config } from './src/Utils/Utils'
 const path = require('path');
 
 (() => {

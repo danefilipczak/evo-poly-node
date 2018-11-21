@@ -1,7 +1,7 @@
 process.argv.push('--config=test')
 
 import { phenotype } from './Fitness';
-import { config } from '../Utils';
+import { config } from '../Utils/Utils';
 
 describe('Fitness', () => {
     it('should be able to parse a genotype into a phenotype', () => {

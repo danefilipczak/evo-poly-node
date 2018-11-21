@@ -4,7 +4,7 @@
  */
 import { partCrossing } from '../VoiceLeading/VoiceLeading'
 
-import { config } from '../Utils'
+import { config } from '../Utils/Utils'
 
 export const fitness = (genotype: number[][][]): number => {
     const score = phenotype(genotype);
