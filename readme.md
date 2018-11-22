@@ -28,4 +28,10 @@ optional: see music21 documentation for configuration of musicXML editors.
 `ranges: int[]` - an array representing the lowest note in each voice's ambitus, beginning with the highest voice 
 
 
-TODO:: put score parsing subprocess into an API. 
+TODO:: 
+put score parsing subprocess into an API. 
+use https://www.npmjs.com/package/elementtree instead of music21
+refactor config to use meter object:
+    numerator:
+    denominator:
+    weights: [1, 0, 1, 0, 1, 0, 0]

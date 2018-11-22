@@ -53,9 +53,11 @@ export const merge = (score: any[][][], template: any[][]) => {
  * This is useful for not waiting around forever for the algorithm to find values that satisfy 
  * the boolean fitness criteria
  */
-//  export const seedling = (template: any[][]): number[][][] => {
-    
-//  }
+export const seedling = (template: any[][]): number[][][] => {
+    // create a random genotype with the same size as template
+    const seed = 
+    return utils.pipe(removePartCrossing)(merge(seed, template));  
+}
 
 
 
