@@ -3,6 +3,10 @@ import Score from '../Score';
 // import { fitness } from './Fitness';
 import { config } from '../Utils/Utils';
 import { pipe } from '../Utils/Utils';
+import * as Fitness from '../Fitness/Fitness';
+import * as Devo from '../Devo/Devo';
+
+export let template;
 
 interface evaluatedGenotype {
     fitness: number | null;
@@ -12,8 +16,10 @@ interface evaluatedGenotype {
 /**
  * Make an initial population from a single template score
  */
-export const initialize = (score: number[][][]): number[][][][] => {
-    return Array.apply(null, new Array(config.populationSize)).map(() => mutate(score));
+export const initialize = (temp: any[][]): number[][][][] => {
+    template = temp;
+    const seedling = Devo.seedling(template);
+    return reproduce([seedling]);
 }
 
 export const mutate = (genotype: number[][][]): number[][][] => {
@@ -22,15 +28,19 @@ export const mutate = (genotype: number[][][]): number[][][] => {
     })))
 }
 
-const generate = (population: number[][][][]): number[][][][] => {
-    return population;
+/**
+ * Fill depletedPopulation up to config.populationSize with mutations
+ * 
+ */
+const reproduce = (depletedPopulation: number[][][][]): number[][][][] => {
+    
 }
 
 const evaluate = (population: number[][][][]): evaluatedGenotype[] => {
     return population.map(genotype => {
         return {
             genotype,
-            fitness: fitness(genotype)
+            fitness: Fitness.evaluate(genotype)
         }
     })
 }
@@ -47,5 +57,5 @@ const log = (evaluatedPopulation: evaluatedGenotype[]): evaluatedGenotype[] => {
 }
 
 export const evolve = (population: number[][][][]): number[][][][] => {
-    return pipe(generate, evaluate, select, log)(population)
+    return pipe(evaluate, log, select, reproduce)(population)
 }

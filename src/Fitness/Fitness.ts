@@ -2,33 +2,26 @@
  * This module is responsible for computing the fitness of a given genotype
  * 
  */
-import { partCrossing, parsimony } from '../VoiceLeading/VoiceLeading'
+import * as Devo from '../Devo/Devo';
+import * as VoiceLeading from '../VoiceLeading/VoiceLeading';
+import { config } from '../Utils/Utils';
 
-import { config } from '../Utils/Utils'
-
-export const fitness = (genotype: number[][][]): number => {
-    const score = phenotype(genotype);
-    // the following are boolean fitness values - if any of them return true, we immediatley 
-    // return a fitness of 0
-    if (partCrossing(score)) {
-        return 0
-    } else {
-        return parsimony(score);
-    }
-}
+export const evaluate = (genotype: number[][][]): number => {
+    const score = Devo.phenotype(genotype);
+    return ineligible(score) ? 0 : trial(score);
+};
 
 /**
- * a genotype is a 3D array of random numbers between 0 and 1.
- * we want to map those numbers into pitch space values or special tokens
- * representing a spread of the previous value ('...') or a rest (null).
- * 
+ * Tests for boolean fitness parameters.
+ * If any of these checks return true, we return a fitness score of 0 
+ * and don't have to evaluate the rest.
  * 
  */
-export const phenotype = (genotype: number[][][]): any[][][] => {
-    return genotype.map((voice, i) => voice.map(measure => measure.map(gene => {
-        // get an int representing a descreet token. 
-        // the number of tokens is the ambitus + 2 special characters
-        const int = Math.round(gene*(config.ambitus+2));
-        return int <= config.ambitus ? int + config.ranges[i] : int === config.ambitus + 1 ? '...' : null
-    })));
+const ineligible = (score) => {
+    return VoiceLeading.partCrossing(score);
 }
+
+const trial = (score: any[]): number => {
+    return VoiceLeading.parsimony(score);
+}
+

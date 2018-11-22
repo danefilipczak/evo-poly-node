@@ -20,6 +20,7 @@ describe('VoiceLeading', ()=>{
     })
 
     it('should be able to calculate the overall parsimony of a score', ()=> {
+        
         const score1 = [[[1, 2, 3], [3, 2, 1]]];
         const score2 = [[[3, 2, 1], [1, 0, -1]]];
         expect(VoiceLeading.parsimony(score1)).toEqual(51);

@@ -26,3 +26,6 @@ optional: see music21 documentation for configuration of musicXML editors.
 
 
 `ranges: int[]` - an array representing the lowest note in each voice's ambitus, beginning with the highest voice 
+
+
+TODO:: put score parsing subprocess into an API. 

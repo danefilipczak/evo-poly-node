@@ -1,7 +1,9 @@
-import { evolve, initialize } from './src/Population/Population'
+import * as Population from './src/Population/Population'
 import { spawn } from 'child_process';
 import { config } from './src/Utils/Utils'
 const path = require('path');
+
+let template;
 
 (() => {
     let scorePath: string = path.join(__dirname, 'input', 'majorScale.mxl')
@@ -14,11 +16,16 @@ const path = require('path');
     }).on('error', err => {
         console.warn('error parsing score', err)
     }).stdout.on('data', data => {
-        console.log('data', data.toString());
-        // const prototype = JSON.parse(data.toString())
+        template = data.toString();
+        onLoad(template);
     })
 })();
 
-// const simulate = (population: number[][][][]) => {
-//     population = evolve(population);
-// }
+const onLoad = (template: any[][][]) => {
+    const population = Population.initialize(template);
+    simulate(population);
+}
+
+const simulate = (population: number[][][][]) => {
+    population = Population.evolve(population);
+}

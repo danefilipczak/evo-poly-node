@@ -43,6 +43,12 @@ export const config = getConfig();
 export const flatten = (input) => {
     return input.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
 }
+
+export const scale = (num, in_min, in_max, out_min, out_max) => {
+    return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
 /**
  * convert an interval value expressed in semitones to an interval object
  * 
