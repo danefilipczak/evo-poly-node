@@ -1,15 +1,38 @@
 import { intervals, Interval } from './Intervals';
+import Config from '../../configs/Config'
 
-const getConfig = () => {
+export const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
+
+const getConfig = (): Config => {
     for (const arg of process.argv) {
         if (arg.includes('--config=')) {
             return require(`../../configs/${arg.split('=')[1]}.json`)
         }
     }
-    console.log('you need to specify a config json via the command line argument --config')
+    throw(new Error('you need to specify a config json via the command line argument --config'));
 }
 
-export const isNumber = (x: any) => {
+const validateMeter = (config: Config): Config => {
+    if(!(config.meter.weights.length % config.meter.numerator === 0)) {
+        throw new Error('The length of your meter weights needs to be a multiple of your meter\'s numerator');
+    }
+    return config;
+}
+
+const validateMutationRate = (config: Config): Config => {
+    if(config.mutationRate > 1 || config.mutationRate < 0) {
+        throw new Error('MutationRate needs to be between 0 and 1');
+    }
+    return config;
+}
+
+export const validateConfig = (config: Config):Config => {
+    return pipe(validateMutationRate, validateMeter)(config);
+}
+
+export const config = validateConfig(getConfig());
+
+export const isNumber = (x: any): boolean => {
     return typeof x === 'number'
 }
 
@@ -37,8 +60,6 @@ export const notes = (seq: any[]): number[] => {
     return seq.reduce((prev, curr) => isNumber(curr) ? [...prev, curr] : prev, [])
 }
 
-export const config = getConfig();
-
 // reduce an nD array to a 1D array
 export const flatten = (input) => {
     return input.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
@@ -62,5 +83,5 @@ export const psToInterval = (delta: number): Interval => {
     };
 }
 
-export const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
+
 

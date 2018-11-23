@@ -1,11 +1,37 @@
+process.argv.push('--config=test')
+
 import * as utils from './Utils';
-import { isRegExp } from 'util';
 
 describe('Utils', ()=> {
     it('should be able to sustain a sequence', ()=>{
         let seq1 = [null, '...', 1, null, 2, '...'];
         let sus1 = utils.sustain(seq1);
         expect(sus1).toEqual([ null, '...', 1, 1, 2, 2 ]);
+    })
+
+    it('should be able to validate a config', () => {
+        const badConfig = {
+            meter: {
+                numerator: 7,
+                denominator: 8,
+                weights: [0, 1, 2, 3, 4, 5]
+            },
+            elitism: 0,
+            populationSize: 0,
+            ambitus: 12,
+            ranges: [0, 1, 2, 3],
+            mutationRate: 0.5,
+
+        }
+        expect(() => utils.validateConfig(badConfig)).toThrow();
+        const goodConfig = {
+            ...badConfig,
+            meter: {
+                ...badConfig.meter,
+                numerator: 6,
+            }
+        }
+        expect(() => utils.validateConfig(goodConfig)).not.toThrow();
     })
 
     it('should be able to extract notes from a sequence', () => {

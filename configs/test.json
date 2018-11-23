@@ -8,5 +8,12 @@
         55,
         48,
         40
-    ]
+    ],
+    "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "weights": [
+            1, 0, 1, 0, 1, 0, 1, 0
+        ]
+    }
 }

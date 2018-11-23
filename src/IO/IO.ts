@@ -3,7 +3,6 @@
  */
 
 import * as utils from '../Utils/Utils';
-import { getPackedSettings } from 'http2';
 
 const fs = require('fs');
 const et = require('elementtree');
@@ -12,10 +11,9 @@ const ElementTree = et.ElementTree;
 const element = et.Element;
 const subElement = et.SubElement;
 
-const data = fs.readFileSync('input/gHarmMinor.musicxml').toString();
-const etree = et.parse(data);
+let divisions;
 
-const soprano = etree.findall('part')[0]
+// const soprano = etree.findall('part')[0]
 // console.log(soprano.findall('measure')[0]);
 // console.log(etree.findall('measure'))
 const stepMap = {
@@ -35,23 +33,69 @@ const formatPitch = pitch => {
     return nn + alter;
 }
 
+const isContinuation = (note) => {
+    const ties = note.findall('tie');
+    if(ties.length > 1) {
+        return true;
+    }
+    if(ties.length === 0) {
+        return false;
+    }
+    if(ties[0].attrib.type === 'stop' || ties[0].attrib.type === 'continue') {
+        return true;
+    }
+}
+
 const getPs = note => {
     const pitch = note.find('pitch');
-    return pitch === null ? null : formatPitch(pitch)
+    return isContinuation(note) ? '...' : pitch === null ? null : formatPitch(pitch)
 }
 
-const formatMeasure = measure => {
-    return measure.findall('note').map(note => ({
-        quarterLength: note.findall('duration')[0].text,
-        ps: getPs(note),
-    }))
+const formatMeasure = (measure, divisions): ExtractedMeasure => {
+    return {
+        notes: measure.findall('note').map(note => ({
+            duration: parseInt(note.findall('duration')[0].text),
+            ps: getPs(note),
+        })),
+        divisions: divisions,
+    }
+    
 }
 
-const score = etree.findall('part').map(part => {
-    return part.findall('measure').map(measure => {
-        return formatMeasure(measure);
+// extract the needed data from the xml element tree
+const elementTreeToJSON = (etree): ExtractedMeasure[][] => {
+    return etree.findall('part').map(part => {
+        let divisions;
+        return part.findall('measure').map(measure => {
+            // update division value if one exists (usually only on the first measure).
+            divisions = measure.find('attributes') ? parseInt(measure.find('attributes').findtext('divisions')) : divisions;
+            return formatMeasure(measure, divisions);
+        })
     })
-})
+}
 
-console.log(JSON.stringify(score, null, 4))
+interface ExtractedNote {
+    duration: number;
+    ps: number | null | string;
+}
+
+interface ExtractedMeasure {
+    notes: ExtractedNote[];
+    divisions: number;
+}
+
+const templateFromJSON = (json: ExtractedMeasure[][]): any[][] => {
+    return json;
+}
+
+export const templateFromXML = (path: string): any[][] => {
+    const data = fs.readFileSync(path).toString();
+    const json = elementTreeToJSON(et.parse(data));
+    const template = templateFromJSON(json);
+    return template;
+}
+
+
+
+console.log(JSON.stringify(templateFromXML('input/gHarmMinor.musicxml'), null, 4))
 
