@@ -84,18 +84,43 @@ interface ExtractedMeasure {
     divisions: number;
 }
 
+const constructMeasure = (measure: ExtractedMeasure): any[] => {
+    const result = [];
+    const numDivisions = utils.config.meter.weights.length;
+    const measureQuarterLength = utils.config.meter.numerator * 4 / utils.config.meter.denominator;
+    const divisionQuarterLength = measureQuarterLength / numDivisions;
+    measure.notes.forEach(note => {
+        const quarterLength = note.duration / measure.divisions;
+        const spread = quarterLength / divisionQuarterLength;
+        result.push(note.ps)
+        let j = 1;
+        while (j < spread) {
+            result.push('...');
+            j++;
+        }
+    })
+    return result;
+}
+
 const templateFromJSON = (json: ExtractedMeasure[][]): any[][] => {
-    return json;
+    return json.map(voice => voice.map(measure => removeEmptyMeasure(constructMeasure(measure))));
 }
 
-export const templateFromXML = (path: string): any[][] => {
+// return null if the measure doesn't contain any numbers
+const removeEmptyMeasure = (measure: any[]): any[] | null => {
+    return measure.reduce((prev, curr) => {
+        return utils.isNumber(curr) ? false : prev;
+    }, true ) ? null : measure;
+}
+
+export const fromFile = (path: string) => {
     const data = fs.readFileSync(path).toString();
-    const json = elementTreeToJSON(et.parse(data));
-    const template = templateFromJSON(json);
-    return template;
+    return templateFromXML(data);
+}
+
+export const templateFromXML = (data: string): any[][] => {
+    return utils.pipe(elementTreeToJSON, templateFromJSON)(et.parse(data));
 }
 
 
-
-console.log(JSON.stringify(templateFromXML('input/gHarmMinor.musicxml'), null, 4))
 
